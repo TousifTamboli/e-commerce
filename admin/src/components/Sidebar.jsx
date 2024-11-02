@@ -16,7 +16,7 @@ const Sidebar = () => {
         
         <NavLink
           className="flex items-center gap-3 border border-gray-300 border-r-0 py-2 rounded-md" // Updated rounded class
-          to="/add"
+          to="/list"
         >
           <img className="w-5 h-5 ml-2" src={assets.order_icon} alt="Add icon" />
           <p className="hidden md:block">List items</p>
@@ -24,7 +24,7 @@ const Sidebar = () => {
         
         <NavLink
           className="flex items-center gap-3 border border-gray-300 border-r-0 py-2 rounded-md" // Updated rounded class
-          to="/add"
+          to="/orders"
         >
           <img className="w-5 h-5 ml-2" src={assets.order_icon} alt="Add icon" />
           <p className="hidden md:block">Orders</p>
