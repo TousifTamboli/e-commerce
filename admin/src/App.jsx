@@ -7,16 +7,17 @@ import List from "./pages/List"; // Corrected import for List
 import Orders from "./pages/Orders"; // Ensure Orders is imported if it's a component
 import Login from "./components/Login";
 import { ToastContainer } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 
-export const backendUrl = "http://localhost:4000";
+// Access the backend URL from the .env file
+export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const [token, setToken] = useState("");
 
   return (
     <div className="bg-gray-50 min-h-screen">
-    <ToastContainer />
+      <ToastContainer />
       {token === "" ? (
         <Login setToken={setToken} />
       ) : (
