@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Access the backend URL from the .env file
 export const backendUrl = "http://localhost:4000/";
+export const currency =  '₹'
 
 const App = () => {
   // Initialize the token from localStorage or set it to an empty string
