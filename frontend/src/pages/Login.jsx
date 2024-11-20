@@ -4,40 +4,44 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const [currentState, setCurrentState] = useState("login");
+  const [currentState, setCurrentState] = useState("Signup");
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
 
-  const onSubmitHandler = async (event) =>{
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      if (currentState === 'Signup') {
-        const response = await axios.post(backendUrl + 'api/user/register', {name, email,password})
-        if (response.data.success) {
-          setToken(response.data.token)
-          localStorage.setItem('token', response.data.token)
-        } else {
-          toast.error(response.data.message)
-        }
+      let response;
+      if (currentState === "Signup") {
+        response = await axios.post(`${backendUrl}api/user/register`, {
+          name,
+          email,
+          password,
+        });
+      } else {
+        response = await axios.post(`${backendUrl}api/user/login`, {
+          email,
+          password,
+        });
       }
-      else{
-        const response = await axios.post(backendUrl + '/api/user/login', {email, password})
-        if (response.data.success) {
-          setToken(response.data.token)
-          localStorage.setItem('token', response.data.token)
-
-        }
-        else {
-          toast.error(response.data.message)
-        }
+  
+      if (response.data.success) {
+        // Access token from the nested structure
+        const token = response.data.data.token; // Corrected this line
+        setToken(token);
+        localStorage.setItem("token", token);
+        toast.success("Successfully logged in!");
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error)
-      toast.error(error.message)
+      console.error(error);
+      toast.error("An error occurred. Please try again.");
     }
-  }
+  };
+  
 
   useEffect(()=>{
     if (token) {
