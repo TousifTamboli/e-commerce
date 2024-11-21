@@ -75,7 +75,7 @@ const ShopContextProvider = (props) => {
     if (token) {
       try {
         await axios.post(
-          backendUrl + "/api/cart/update",
+          backendUrl + "api/cart/update",
           { itemId, size, quantity },
           { headers: { token } }
         );
@@ -132,7 +132,7 @@ const ShopContextProvider = (props) => {
   };
 
   useEffect(() => {
-    console.log("Final API URL:", backendUrl + "api/cart/add");
+    // console.log("Final API URL:", backendUrl + "api/cart/add");
     getProductsData();
   }, []);
 
