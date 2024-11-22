@@ -5,38 +5,46 @@ import axios from "axios";
 
 const Orders = () => {
   const { backendUrl, token, currency } = useContext(ShopContext);
-
-  const [orderData, setOrderData] = useState([])
+  const [orderData, setOrderData] = useState([]);
+  const [activeTrackingId, setActiveTrackingId] = useState(null); // Store active tracking ID
 
   const loadOrderData = async () => {
     try {
       if (!token) {
-        return null
+        return null;
       }
-      
-      const response = await axios.post(backendUrl + 'api/order/userorders',{},{headers:{token}})
+
+      const response = await axios.post(backendUrl + 'api/order/userorders', {}, { headers: { token } });
       if (response.data.success) {
-        let allOrdersItem = []
-        response.data.orders.map((order) =>{
-          order.items.map((item) =>{
-            item['status'] = order.status
-            item['payment'] = order.payment
-            item['paymentMethod'] = order.paymentMethod
-            item['date'] = order.date
-            allOrdersItem.push(item)
-          })
-        })
+        let allOrdersItem = [];
+        response.data.orders.map((order) => {
+          order.items.map((item) => {
+            item['status'] = order.status;
+            item['payment'] = order.payment;
+            item['paymentMethod'] = order.paymentMethod;
+            item['date'] = order.date;
+            item['orderId'] = order._id; // Store orderId to track it
+            allOrdersItem.push(item);
+          });
+        });
         setOrderData(allOrdersItem.reverse());
       }
     } catch (error) {
-      
+      console.log(error);
     }
-  }
+  };
 
-  useEffect(() =>{
-    loadOrderData()
+  const handleTrackOrder = (productId) => {
+    if (activeTrackingId === productId) {
+      setActiveTrackingId(null); // Close the tracking info if clicked again
+    } else {
+      setActiveTrackingId(productId); // Set the active tracking ID
+    }
+  };
 
-  },[token])
+  useEffect(() => {
+    loadOrderData();
+  }, [token]);
 
   return (
     <div className="border-t pt-16">
@@ -61,7 +69,6 @@ const Orders = () => {
                 </div>
                 <p className="mt-1">Date: <span className="text-gray-700">{new Date(item.date).toDateString()}</span></p>
                 <p className="mt-1">Payment: <span className="text-gray-700">{item.paymentMethod}</span></p>
-              
               </div>
             </div>
             <div className="md:w-1/2 flex justify-between">
@@ -69,11 +76,36 @@ const Orders = () => {
                 <p className="min-w-2 h-2 rounded-full bg-green-500"></p>
                 <p className="text-sm md:text-base">{item.status}</p>
               </div>
-              <button onClick={loadOrderData} className="border px-4 py-2 text-sm font-medium rounded-sm">Track Order</button>
+              <button onClick={() => handleTrackOrder(item._id)} className="border px-4 py-2 text-sm font-medium rounded-sm">
+                Track Order
+              </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Display tracking info for the active product */}
+      {activeTrackingId && (
+        <div className="mt-8 p-4 border-t">
+          {/* Find the order data of the active productId */}
+          {orderData.map((item) => {
+            if (item._id === activeTrackingId) {
+              return (
+                <div key={item._id}>
+                  <h4 className="text-xl font-semibold">Tracking Information for Product: {item.name}</h4>
+                  <div className="text-gray-700">
+                    <p><strong>Status:</strong> {item.status}</p>
+                    <p><strong>Payment:</strong> {item.payment ? "Paid" : "Pending"}</p>
+                    <p><strong>Payment Method:</strong> {item.paymentMethod}</p>
+                    <p><strong>Order Date:</strong> {new Date(item.date).toDateString()}</p>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
+      )}
     </div>
   );
 };
