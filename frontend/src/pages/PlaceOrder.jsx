@@ -3,11 +3,13 @@ import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
 import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const PlaceOrder = () => {
 
   const [method, setMethod] = useState('cod');
-  const {navigate, backendUrl, cartItems, setCartItems, getCartAmount, delivery_fee, products} = useContext(ShopContext);
+  const {navigate, backendUrl, cartItems, setCartItems, getCartAmount, delivery_fee, products, token} = useContext(ShopContext);
   const [formData, setFormData] = useState({
       firstName:'',   
       lastName:'',   
@@ -45,7 +47,32 @@ const PlaceOrder = () => {
       }
       
 
-      console.log(orderItems);
+      
+      let orderData = {
+        address: formData,
+        items: orderItems,
+        amount: getCartAmount() + delivery_fee,
+        paymentMethod: method
+      }
+
+      switch(method){
+        // api calls for cash on delivery
+        case 'cod':
+          const response = await axios.post(backendUrl + 'api/order/place', orderData, {headers:{token}})
+          if (response.data.success) {
+            setCartItems({})
+            navigate('/orders')
+          } 
+          else {
+              toast.error(response.data.message);
+          }
+          break;
+        
+        default:
+          break;
+      }
+
+
     } catch (error) {
         console.error("Order placement error:", error);
         toast.error("Failed to place the order. Please try again.");

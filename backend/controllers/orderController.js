@@ -1,5 +1,5 @@
 import orderModel from "../models/orderModel.js";
-import userModel from "../models/userModel";
+import userModel from "../models/userModel.js";
 
 // placing order using cash on devivery
 const placeOrder =  async (req, res) => {
@@ -11,7 +11,7 @@ const placeOrder =  async (req, res) => {
             items,
             address,
             amount,
-            paymenMethod:"COD",
+            paymentMethod:"cod",
             payment:false,
             date: Date.now()
         }
