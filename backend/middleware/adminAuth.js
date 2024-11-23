@@ -2,20 +2,25 @@ import jwt from "jsonwebtoken";
 
 const adminAuth = async (req, res, next) => {
   try {
-    const { token } = req.headers;
+    const token = req.headers.token; // Correct way to extract token
     if (!token) {
-      return res.json({ success: false, message: "Not authorized" });
+      return res.status(401).json({ success: false, message: "Token missing. Not authorized." });
     }
-    const token_decode = jwt.verify(token, process.env.JWT_SECRET);
-    if (token_decode !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
-      return res.json({ success: false, message: "Not authorized" });
+
+    // Verify and decode the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Validate the admin role or email in the token payload
+    if (decoded.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Invalid token. Not authorized." });
     }
+
+    // Pass control to the next middleware if authorized
     next();
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error(error);
+    res.status(401).json({ success: false, message: "Invalid or expired token. Not authorized." });
   }
 };
 
-
-export default adminAuth
+export default adminAuth;
