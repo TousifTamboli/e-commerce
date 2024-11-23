@@ -14,6 +14,8 @@ const Orders = ({ token }) => {
     }
 
     try {
+      console.log(token);
+
       const response = await axios.post(
         backendUrl + "api/order/list",
         {},
@@ -33,7 +35,7 @@ const Orders = ({ token }) => {
   const statusHandler = async (event, orderId) => {
     try {
       const response = await axios.post(
-        backendUrl + 'api/order/status',
+        backendUrl + "api/order/status",
         { orderId, status: event.target.value },
         { headers: { token } }
       );
@@ -47,10 +49,13 @@ const Orders = ({ token }) => {
     } catch (error) {
       // Handle errors correctly and log them
       console.error("Error updating order status:", error);
-      toast.error(error.response ? error.response.data.message : "Failed to update order status.");
+      toast.error(
+        error.response
+          ? error.response.data.message
+          : "Failed to update order status."
+      );
     }
   };
-  
 
   // Fetch orders when token changes
   useEffect(() => {
@@ -100,7 +105,9 @@ const Orders = ({ token }) => {
                 </div>
               </div>
               <div className="text-right w-48">
-                <p className="font-semibold text-lg">{currency} {order.amount}</p>
+                <p className="font-semibold text-lg">
+                  {currency} {order.amount}
+                </p>
                 <p className="text-sm text-gray-600">
                   Items: {order.items.length}
                 </p>

@@ -9,9 +9,10 @@ const adminAuth = async (req, res, next) => {
 
     // Verify and decode the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
 
     // Validate the admin role or email in the token payload
-    if (decoded.role !== "admin") {
+    if (decoded.id !== "admin") {
       return res.status(403).json({ success: false, message: "Invalid token. Not authorized." });
     }
 
