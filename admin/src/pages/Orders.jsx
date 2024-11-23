@@ -14,7 +14,6 @@ const Orders = ({ token }) => {
     }
 
     try {
-      console.log(token);
 
       const response = await axios.post(
         backendUrl + "api/order/list",
