@@ -28,7 +28,6 @@ const Login = () => {
       }
   
       if (response.data.success) {
-        // Access token from the nested structure
         const token = response.data.data.token; // Corrected this line
         setToken(token);
         localStorage.setItem("token", token);

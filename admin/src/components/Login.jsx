@@ -15,8 +15,9 @@ const Login = ({ setToken }) => {
         password,
       });
       if (response.data.success) {
-        setToken(response.data.token);
-        localStorage.setItem("token", response.data.token); // Persist token
+        const token = response.data.data.token; // Corrected this line
+        setToken(token);
+        localStorage.setItem("token", token); // Persist token
         toast.success("Login successful!");
       } else {
         toast.error(response.data.message);
