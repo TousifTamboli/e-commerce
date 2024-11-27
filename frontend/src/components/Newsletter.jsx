@@ -7,8 +7,7 @@ const Newsletter = () => {
 
   return (
     <div className="text-center">
-      <p className="text-2xl font-medium text-gray-800">Subsribe Now</p>
-      <p className="text-gray-400 mt-3">Lorem10</p>
+      <p className="text-2xl font-medium text-gray-800 pb-4">Subsribe Now</p>
       <form
         onSubmit={onSubmitHandler}
         className="w-full sm:w-1/2 flex items-center gap-3 mx-auto ay-6 border pl-3"
